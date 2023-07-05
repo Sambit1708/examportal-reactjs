@@ -1,0 +1,34 @@
+.turncate {
+    display: block;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.text-change {
+    font-size: 1.2em;
+    font-family: "Poppins", sans-serif;
+}
+.circular-progressbar {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    background-color: #0099ff;
+    display: grid;
+    place-items: center;
+}
+.circular-progressbar::before {
+    content: '';
+    position: absolute;
+    height: 80%;
+    width: 80%;
+    background-color: #fff;
+    border-radius: 50%;
+}
+.value-container {
+    position: relative;
+    font-size: 25px;
+    color: #231c3d;
+}

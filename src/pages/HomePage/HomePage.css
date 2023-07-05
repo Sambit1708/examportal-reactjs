@@ -1,0 +1,39 @@
+.inner-home {
+  position: relative;
+  top: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+
+@media only screen and (max-width: 700px) {
+  
+  .inner-home {
+    top: 30px;
+  }
+  img {
+    position: absolute;
+    z-index: -1;
+    top: 150px;
+  }
+  .home-text {
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .home-text h1 {
+    position: relative;
+    top: -50px;
+  }
+  h1 span {
+    position: relative;
+    left: 50px;
+  }
+  h1 span:first-child {
+    position: relative;
+    left: 150px;
+  }
+}

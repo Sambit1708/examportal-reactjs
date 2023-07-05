@@ -1,0 +1,7 @@
+.flex-dashboard-component {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 50px 30px 0 30px;
+}
