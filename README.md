@@ -1,70 +1,41 @@
-# Getting Started with Create React App
+# Getting Started with Exam Portal App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Before Start need to execute following command on project folder
+&emsp; 1. npm install react-router-dom
 
-## Available Scripts
+&emsp; 2. npm install axios
 
-In the project directory, you can run:
+&emsp; 3. npm install bootstrap
 
-### `npm start`
+&emsp; 4. npm install jodit-react
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+&emsp; 5. npm install react-apexcharts
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+&emsp; 6. npm install react-loader-spinner
 
-### `npm test`
+&emsp; 7. npm install jodit-react
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+&emsp; 8. npm install sweetalert
 
-### `npm run build`
+&emsp; 9. npm install sweetalert2
+##
+# Project Images
+### HomePage
+![Exam-HomePage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/4ec63b8b-4b1b-4d12-a366-09540a093047)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Admin Page
+![Exam-AdminPage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/aa7104a0-b051-486d-8fc9-55e703bdb41f)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## User Page
+![Exam-userPage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/d12ac1cd-ae7c-4b5a-b6a1-572f187a92c3)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## User Quiz Page
+![Exam-QuizPage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/18516ba0-66ab-4768-84fc-f244454d9c34)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Result Page
+![Exam-ResultPage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/a1fb85bc-7722-453a-85cd-5a74585df476)
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
