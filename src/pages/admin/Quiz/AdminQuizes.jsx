@@ -106,13 +106,15 @@ export default function AdminQuizes() {
               <Box sx={{ minWidth: 275 }}  id="list-item">
                 {quizs.map((item) => (
                   <div key={item.qid}>
-                      <Card className='mt-1' variant="outlined">{card({title:`${item.title}`,
-                                                                      description:`${item.description}`,
-                                                                      maxMark:`${item.maxMark}`,
-                                                                      noOfQuestions:`${item.noOfQuestions}`,
-                                                                      category:`${item.category.title}`,
-                                                                      qid:`${item.qid}`}, navigator)}</Card>
-
+                      <Card className='mt-1' 
+                        variant="outlined">
+                          {card({ title:`${item.title}`,
+                                  description:`${item.description}`,
+                                  maxMark:`${item.maxMark}`,
+                                  noOfQuestions:`${item.noOfQuestions}`,
+                                  category:`${item.category.title}`,
+                                  qid:`${item.qid}`}, navigator)}
+                      </Card>
                   </div>
               ))}
               </Box>
