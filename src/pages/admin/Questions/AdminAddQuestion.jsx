@@ -18,8 +18,10 @@ export default function AdminAddQuestion() {
   const createQuestion = async (data) => {
     try {
         // eslint-disable-next-line no-unused-vars
-        const res = await QuestionService.addQuestion(data);
-        swal("Done!", "Category Added Sucessfully", "success");
+        const questionAddResponse = await QuestionService.addQuestion(data);
+        if(questionAddResponse.status === 201) {
+          swal("Done!", "Category Added Sucessfully", "success");
+        }
     } catch(error) {
         swal("Something Went Wrong!!",`${error}`, "error");
     }
@@ -38,7 +40,7 @@ export default function AdminAddQuestion() {
       option4:`${formRef.current.option4.value}`,
       answer:`${formRef.current.answerRef.value}`,
       quiz: {
-        qid:`${href.slice(href.lastIndexOf('/')+1, href.length)}`
+        id:`${href.slice(href.lastIndexOf('/')+1, href.length)}`
       }
     }
     
@@ -66,11 +68,8 @@ export default function AdminAddQuestion() {
                       <Grid item xs={6} md={5}>
                         <div className="mb-3">
                           <TextField
-                            className='form-control'
-                            required
-                            id="option1"
-                            label="Option 1"
-                            name='option1'
+                            className='form-control' required id="option1"
+                            label="Option 1" name='option1'
                           />
                         </div>
                       </Grid>
@@ -78,23 +77,16 @@ export default function AdminAddQuestion() {
                       <Grid item xs={6} md={5}>
                         <div className="mb-3">
                           <TextField
-                            className='form-control'
-                            required
-                            name='option2'
-                            id="option2"
-                            label="Option 2"
-                            rname='option2'
+                            className='form-control' required
+                            name='option2' id="option2"
                           />
                         </div>
                       </Grid>
                       <Grid item xs={6} md={5}>
                         <div className="mb-3">
                           <TextField
-                            className='form-control'
-                            required
-                            id="option3"
-                            label="Option 3"
-                            name='option3'
+                            className='form-control' required
+                            id="option3" label="Option 3" name='option3'
                           />
                         </div>
                       </Grid>
@@ -103,11 +95,8 @@ export default function AdminAddQuestion() {
                       <Grid item xs={6} md={5}>
                         <div className="mb-3">
                           <TextField
-                            className='form-control'
-                            required
-                            id="option4"
-                            label="Option 4"
-                            name='option4'
+                            className='form-control' required
+                            id="option4" label="Option 4" name='option4'
                           />
                         </div>
                       </Grid>
@@ -119,12 +108,13 @@ export default function AdminAddQuestion() {
                           labelId="answer-select-label"
                           id="answer"
                           value={answer}
-                          defaultValue='option1'
+                          defaultValue='-- Select --'
                           className='form-control'
                           label="Answer"
                           onChange={handleChange}
                           name='answerRef'
                         >
+                          <MenuItem disabled>-- Select --</MenuItem>
                           <MenuItem value='option1'>Option 1</MenuItem>
                           <MenuItem value='option2'>Option 2</MenuItem>
                           <MenuItem value='option3'>Option 3</MenuItem>

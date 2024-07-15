@@ -1,3 +1,6 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
 .flex-dashboard-component {
   flex-grow: 1;
   display: flex;

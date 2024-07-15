@@ -26,8 +26,14 @@ class QuestionService {
         return axios.get(`${QUESTION}/${id}`)
     }
 
-    updateQuestion(question) {
-        return axios.post(`${QUESTION}${UPDATE_QUESTION}`,question)
+    updateQuestion(id, question) {
+        const url = `${QUESTION}${UPDATE_QUESTION}/${id}`;
+        return axios.put(url, question, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+ 
+        })
     }
 
     deleteQuestion(id) {

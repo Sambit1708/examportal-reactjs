@@ -8,10 +8,10 @@ const API = axios.create({
 });
 
 API.interceptors.request.use((request) => {
-    if(localStorage.getItem('token') != null && request.url !== 'http://localhost:8085/generate-token') {
-      request.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
-    }
-    return request;
+  if(localStorage.getItem('token') != null && request.url !== 'http://localhost:8085/generate-token') {
+    request.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+  }
+  return request;
 })
 
 

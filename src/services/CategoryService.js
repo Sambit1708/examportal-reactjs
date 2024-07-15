@@ -1,16 +1,25 @@
 import axios from "../Utils/axios";
 
-const CATEGORIES = "/category";
-const ADD_CATEGORY = '/add-category';   
+const CATEGORY = "/category";
+const ADD_CATEGORY = '/add-category'; 
+const DELETE_CATEGORY = '/delete'  
 
 class CategoryService {
 
    getAllCategories() {
-        return axios.get(`${CATEGORIES}/`);
+     return axios.get(`${CATEGORY}/`);
    }
 
    createCategory(categoryData) {
-        return axios.post(`${CATEGORIES}${ADD_CATEGORY}`, categoryData);
+     return axios.post(`${CATEGORY}${ADD_CATEGORY}`, categoryData);
+   }
+
+   deleteCategory(cId) {
+     return axios.delete(`${CATEGORY}${DELETE_CATEGORY}`, {
+               params: {
+                    cId: cId
+               }
+            })
    }
 }
 // eslint-disable-next-line import/no-anonymous-default-export

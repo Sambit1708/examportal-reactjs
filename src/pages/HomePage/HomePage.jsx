@@ -11,7 +11,7 @@ const HomePage = () => {
   return (
     <React.Fragment>
         <NavBar />
-        <Box sx={{ marginTop:'70px', height: '620px'}}>
+        <Box sx={{ marginTop:'70px', height: '550px'}}>
             <Box className='inner-home' >
                 <div style={{display:'flex'}}>
                     <div className='home-text'>
@@ -32,7 +32,7 @@ const HomePage = () => {
                             </Button>
                         </Container>
                     </div>
-                    <img style={{ width:'400px', marginTop: '-50px' }} src='https://drive.google.com/uc?export=view&id=1WQkpeagWobYDAMPOKW27CGfEKA728N2O' alt='exam' />
+                    <img style={{ width:'400px', marginTop: '-50px' }} src='https://res.cloudinary.com/djgwfxhqp/image/upload/v1721023887/ivrhjlhwxwkmxoeviljq.jpg' alt='exam' />
                 </div>
             </Box>
         </Box>

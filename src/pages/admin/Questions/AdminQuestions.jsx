@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import QuestionService from '../../../services/QuestionService';
 import swal from 'sweetalert';
 import Swal from 'sweetalert2'
+import PreLoading from '../../../components/PreLoading';
 
 const deleteQuestion = async (id) => {
   Swal.fire({
@@ -44,34 +45,30 @@ const card = ({...options}, navigator, parser) => (
       <Typography variant="h6" component="div">
         <b>Q{`${options.qNo})`}</b>&nbsp; <div dangerouslySetInnerHTML={{__html: options.description}}></div>
       </Typography>
-      <Typography sx={{ mb: 2 }}>
-      </Typography>
-      <Typography component={'span'} variant="body2" sx={{marginLeft:'10px'}}>
-        <div className='option-class p-1'>
-          <Grid container spacing={2}>
-            <Grid className='border' item xs={6} md={6}>
-              <h6><b>1{')'}</b>&nbsp;{options.option1}</h6>
-            </Grid>
-            <Grid className='border' item xs={6} md={6}>
-              <h6><b>2{')'}</b>&nbsp;{options.option2}</h6>
-            </Grid>
-            <Grid className='border' item xs={6} md={6}>
-              <h6><b>3{')'}</b>&nbsp;{options.option3}</h6>
-            </Grid>
-            <Grid className='border' item xs={6} md={6}>
-              <h6><b>4{')'}</b>&nbsp;{options.option4}</h6>
-            </Grid>
-          </Grid>
+      <Divider sx={{ borderColor: "black", margin:'5px 0 10px 0' }} />
+      <div className='option-class p-1'>
+          <h6><b>1{')'}</b>&nbsp;{options.option1}</h6>
+          <h6><b>2{')'}</b>&nbsp;{options.option2}</h6>
+          <h6><b>3{')'}</b>&nbsp;{options.option3}</h6>
+          <h6><b>4{')'}</b>&nbsp;{options.option4}</h6>
         </div>
-      </Typography>
-      <Divider  sx={{marginTop:'10px'}}></Divider>
+      <Divider  sx={{ borderColor: "black", marginTop:'10px'}} />
       <p style={{marginTop:'5px'}}><b>Correct Answer:</b> {options[`${options.answer}`]}</p>
-      <Divider sx={{marginTop:'-5px'}}></Divider>
+      <Divider sx={{ borderColor: "black"}} />
     </CardContent>
     <CardActions>
       <div style={{ margin:'auto',marginTop:'-5px'}}>
-        <Button sx={{marginRight: '10px'}} onClick={(event) => {deleteQuestion(options.qid)}} variant='contained' color='error'>Delete</Button>
-        <Button onClick={() => {navigator(`/Admin/Quiz/Question/Update/${options.qid}`)}} variant='contained' color='success'>Update</Button>
+        <Button sx={{ marginRight: '10px', fontFamily: "poppins" }} 
+                onClick={(event) => {deleteQuestion(options.qid)}} 
+                variant='contained' color='error'
+        >
+          Delete
+        </Button>
+        <Button onClick={() => {navigator(`/Admin/Quiz/Question/Update/${options.qid}`)}} 
+                variant='contained' color='success' sx={{ fontFamily: "poppins" }}
+        >
+          Update
+        </Button>
       </div>
     </CardActions>
   </React.Fragment>
@@ -81,12 +78,17 @@ export default function AdminQuestion() {
 
   const [questions, setQuestions] = React.useState([])
   const [quizId, setQuizId] = React.useState('')
+  const [ preLoading, setPreLoading ] = React.useState(true);
+  const navigator  = useNavigate();
   const parser = new DOMParser();
 
   const fetchQuestionByQuiz = async (data) => {
     try {
-        const result = await QuestionService.getAdminQuestionByQuiz(data);
-        setQuestions(result.data)
+        const resultRespnse = await QuestionService.getAdminQuestionByQuiz(data);
+        if(resultRespnse.status === 200) {
+          setQuestions(resultRespnse.data)
+          setPreLoading(false);
+        }
     } catch(error) {
         swal("Something Went Wrong!!",`${error}`, "error");
     }
@@ -98,21 +100,34 @@ export default function AdminQuestion() {
     fetchQuestionByQuiz(href.slice(href.lastIndexOf('/')+1, href.length));
   }, [])
 
-  const navigator  = useNavigate();
+  if(preLoading) {
+    return (
+      <Box sx={{display: 'flex'}}>
+        <SideBar />
+        <Box sx={{ bgcolor: '#f7f7ff', minHeight: 580, flexGrow: 1 }}>
+          <PreLoading />
+        </Box>
+      </Box>
+    )    
+  }
   return (
-    <div>
+    <Box>
         <Box height={30} />
         <Box sx={{display: 'flex', backgroundColor: '#f5f5f5'}}>
             <SideBar />
             <Box component="main" sx={{ flexGrow: 1, p: 3, marginTop:'20px'}}>
               <div className='text-center mb-2'>
-                <Button onClick={() => {navigator(`/Admin/Quiz/Question/Add/${quizId}`)}} variant='contained' color='error'>ADD Question</Button>
+                <Button onClick={() => {navigator(`/Admin/Quiz/Question/Add/${quizId}`)}} 
+                        variant='contained' color='error' sx={{ fontFamily: "poppins" }}
+                >
+                  ADD Question
+                </Button>
               </div>
               <Grid container spacing={2}>
                   {questions.map((item, index) => (
-                    <Grid key={item.quesid} item xs={12}>
+                    <Grid key={item.id} item xs={12}>
                       <Card sx={{boxShadow: '5px 10px 8px #888888'}}
-                        variant="contained">{card({ qid:`${item.quesid}`,
+                        variant="contained">{card({ qid:`${item.id}`,
                                                     description:`${item.content}`,
                                                     option1:`${item.option1}`,
                                                     option2:`${item.option2}`,
@@ -126,6 +141,6 @@ export default function AdminQuestion() {
               </Grid>
             </Box>
         </Box>
-    </div>
+    </Box>
   )
 }

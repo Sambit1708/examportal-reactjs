@@ -1,43 +1,41 @@
-import { Button, Card, CardContent, Divider, CardActions, Box, Grid } from '@mui/material'
+import { Button, Card, CardContent, CardActions, Box, Grid, CircularProgress, Typography } from '@mui/material'
 import * as React from 'react'
 import ResultService from '../../../services/ResultService'
 import Swal from 'sweetalert2'
-import UserService from '../../../services/UserService'
 import NavBar from '../../../components/NavBar'
 import { useNavigate } from 'react-router-dom'
+import PreLoading from '../../../components/PreLoading'
+
+
+function AppLogo() {
+    return (
+        <React.Fragment>
+            <b>e<span style={{color:'blue', fontSize:'1.5em'}}>X</span>am</b>portal
+        </React.Fragment>
+    );
+}
 
 const QuizResult = () => {
 
-  const [quizResult, setQuizResult] = React.useState({
-
-  })
+  const [quizResult, setQuizResult] = React.useState({})
   const navigate = useNavigate()
-  const [progressValue, setProgressValue] = React.useState(0)
+  const [progressValue, setProgressValue] = React.useState(10)
   const [progressEndValue, setProgressEndValue] = React.useState(100)
   const [name, setName] = React.useState()
   const [quiz, setQuiz] = React.useState()
-  //const [dataLoading, setDataLoading] = React.useState
-  let speed = 1
-  let progress = React.useRef();
+  const [ preLoading, setPreLoading ] = React.useState(true);
 
   const fetchResultById = async (id) => {
     try {
-        const User = await UserService.getCurrentUser();
-        const userId = User.data.id
-        const QuizResult = {
-            user: {
-                id: userId
-            },
-            quiz: {
-                qid: id
-            }
+        const resultResponse = await ResultService.getResultByQuiz(id);
+        if(resultResponse.status === 200) {
+            const mark = resultResponse.data.mark
+            setProgressEndValue(Math.floor((mark / parseInt(resultResponse.data.quiz.maxMark)) * 100))
+            setName(`${resultResponse.data.user.firstName} ${resultResponse.data.user.lastName} `)
+            setQuiz(`${resultResponse.data.quiz.title}`)
+            setQuizResult(resultResponse.data)
+            setPreLoading(false);
         }
-        const result = await ResultService.getResultByUserAndQuiz(QuizResult);
-        const mark = result.data.mark
-        setProgressEndValue(Math.floor((mark / 200) * 100))
-        setName(`${result.data.user.firstName} ${result.data.user.lastName} `)
-        setQuiz(`${result.data.quiz.title}`)
-        setQuizResult(result.data)
         
     } catch(error) {
         Swal.fire("Some thing went wrong!!", `${error}`, "error");
@@ -46,98 +44,133 @@ const QuizResult = () => {
 
   React.useEffect(() => {
     var href = window.location.href
-    let progressBar = document.querySelector(".circular-progressbar")
     fetchResultById(href.slice(href.lastIndexOf('/')+1, href.length));
-    
-    progress.current = setInterval(() => {
-        setProgressValue(progressVal => progressVal + 1)
-        progressBar.style.background = `conic-gradient(
-            #0099ff ${progressValue * 3.7}deg,
-            #cadcff ${progressValue * 3.7}deg
-        )`
-    }, speed)
-    return () => clearInterval(progress.current)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progressValue])
-
-  React.useEffect(() => {
-
-    if(progressValue === progressEndValue) {
-        clearInterval(progress.current)
-    }
-    if(progressValue > 100) {
-        setProgressValue(0)
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [progressValue])
-
-  React.useEffect(() => {
-    if(quizResult == null) {
-        window.location.reload()
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  React.useEffect(() => {
+    if(Object.keys(quizResult).length > 0) {
+        const timer = setInterval(() => {
+            setProgressValue((prevProgress) => 
+                (prevProgress >= progressEndValue ? progressEndValue : prevProgress + 5)
+            );
+        }, 100);
+        return () => {
+            clearInterval(timer);
+        };
+    }
+  }, [progressEndValue, quizResult])
+
+  if(preLoading) {
+    return (
+      <Box>
+        <Box sx={{ bgcolor: '#f7f7ff', minHeight: 580 }}>
+          <PreLoading />
+        </Box>
+      </Box>
+    )    
+  }
+
   return (
-    <React.Fragment>
-      
+    Object.keys(quizResult).length > 0 &&
+    <Box>
       <NavBar />
-      <Box sx={{marginTop: '70px', backgroundColor: '#E2E5DE'}}>
-        <Card sx={{minHeight: '300px',width:'600px', margin: 'auto'}}>
-            <Divider />
+      <Box sx={{ marginTop: '70px', backgroundColor: '#eee', minHeight: "576px"}}>
+        <Card sx={{minHeight: '300px',width:'700px', margin: 'auto'}}>
+            <Box sx={{ borderRadius: "5px", m: 1, bgcolor: "#EEEEEE" }}>
+                <Box sx={{ p: 2, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Box 
+                        component="img"
+                        title="Quiz"
+                        src="https://res.cloudinary.com/djgwfxhqp/image/upload/v1721063955/ejtapqisgx0bxvwsfga0.png"
+                        sx={{ width: "70px" }}
+                    />
+                    <Box sx={{ ml: 8 }}>
+                        <Box>{AppLogo()} Quiz App</Box>
+                    </Box>
+                </Box>
+            </Box>
             <CardContent>
-            <div style={{textAlign: 'center'}}>
-                <img style={{width: '100px' }} src='https://drive.google.com/uc?export=view&id=1vh9bsku6g3l2UbDFod6JhLyeIXl6bmxT' alt='quizResult'/>
-            </div>
-            <div style={{margin: 'auto', marginTop:'50px'}}>
-                <Grid container>
-                    <Grid item xs={6}>
-                        <div className='d-flex text-change'>
-                            <h5>Name:</h5><div style={{marginLeft: 5}}>{name}</div>
-                        </div>
+                <Box sx={{textAlign: 'center'}}>
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <CircularProgress size="7em" thickness={6} 
+                                            className="bottom-circle" variant="determinate" value={100}
+                                            sx={{
+                                                position: "absolute",
+                                                color: (theme) =>
+                                                theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+                                            }}                    
+                        />
+                        <CircularProgress size="7em" thickness={6} 
+                                            className="top-circle" variant="determinate" value={progressValue}
+                            
+                        />
+                        <Box
+                            sx={{
+                                top: -9, left: -2, bottom: 0, right: 0,
+                                position: 'absolute', display: 'flex',
+                                alignItems: 'center', justifyContent: 'center',
+                                height: "130px", width: "130px"
+                            }}
+                        >
+                            <Typography variant="caption" component="div" color="text.secondary" fontSize="20px" fontWeight="600">
+                                {`${Math.round(progressValue)}%`}
+                            </Typography>
+                        </Box>
+                    </Box>
+                </Box>
+                <Box sx={{margin: 'auto', marginTop:'30px', border: "1px solid black", width: "580px", p: 2}}>
+                    <Grid container>
+                        <Grid item xs={6}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Name:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{name}</div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={1} sx={{ borderLeft: "1px solid black" }}></Grid>
+                        <Grid item xs={5}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Quiz:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{quiz}</div>
+                            </div>
+                        </Grid>
+                        <Grid sx={{marginTop:'30px'}} item xs={6}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Max mark:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{quizResult.quiz.maxMark}</div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={1} sx={{ borderLeft: "1px solid black" }}></Grid>
+                        <Grid sx={{marginTop:'30px'}} item xs={5}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Mark:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{quizResult.mark}</div>
+                            </div>
+                        </Grid>
+                        <Grid sx={{marginTop:'20px'}} item xs={6}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Attempted:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{quizResult.attempted}</div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={1} sx={{ borderLeft: "1px solid black" }}></Grid>
+                        <Grid sx={{marginTop:'20px'}} item xs={5}>
+                            <div className='d-flex text-change'>
+                                <span style={{ fontSize: "16px", fontWeight: "bold" }}>Correct:</span>
+                                <div style={{ marginLeft: 5, fontSize: "16px" }}>{quizResult.correct}</div>
+                            </div>
+                        </Grid>
                     </Grid>
-                    <Grid sx={{ marginTop:'-20px'}} item xs={6}>
-                        <div className='circular-progressbar' style={{marginLeft:'50px'}}>
-                            <div className='value-container'>{progressValue}%</div>
-                        </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <div className='d-flex text-change ' style={{ marginTop:'-40px'}}>
-                            <h5>Quiz:</h5><div style={{marginLeft: 5}}>{quiz}</div>
-                        </div>
-                    </Grid>
-                    <Grid sx={{marginTop:'30px'}} item xs={6}>
-                        <div className='d-flex text-change'>
-                            <h5>Mark:</h5><div style={{marginLeft: 5}}>{quizResult.mark}</div>
-                        </div>
-                    </Grid>
-                    <Grid sx={{marginTop:'30px'}} item xs={6}>
-                        <div className='d-flex text-change'>
-                            <h5>Max mark:</h5><div style={{marginLeft: 5}}>200</div>
-                        </div>
-                    </Grid>
-                    <Grid sx={{marginTop:'20px'}} item xs={6}>
-                        <div className='d-flex text-change'>
-                            <h5>Attempted:</h5><div style={{marginLeft: 5}}>{quizResult.attempted}</div>
-                        </div>
-                    </Grid>
-                    <Grid sx={{marginTop:'20px'}} item xs={6}>
-                        <div className='d-flex text-change'>
-                            <h5>Correct:</h5><div style={{marginLeft: 5}}>{quizResult.correct}</div>
-                        </div>
-                    </Grid>
-                </Grid>
-            </div>
+                </Box>
             </CardContent>
             <CardActions>
-                <div style={{margin:'auto'}}>
+                <Box sx={{margin:'auto'}}>
                     <Button sx={{marginRight:'5px'}} variant='contained' color='success'>Print</Button>
                     <Button variant='contained' color='error' onClick={() => {navigate('/User/')}}>Back</Button>
-                </div>
+                </Box>
             </CardActions>
         </Card>
       </Box>
-    </React.Fragment>
+    </Box>
   )
 }
 

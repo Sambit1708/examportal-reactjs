@@ -1,43 +1,40 @@
 import * as React from "react";
-import { Avatar, Box, Button, CssBaseline, Grid, Typography } from "@mui/material";
+import { Box, Button, CssBaseline, Stack, TextField, Typography } from "@mui/material";
 import SideBar from "../../components/SideBar";
 import './assets/AdminProfile.css'
 import Divider from '@mui/material/Divider';
 import UserService from "../../services/UserService";
 import Swal from "sweetalert2";
+import SettingsIcon from '@mui/icons-material/Settings';
 // import swal from "sweetalert";
 
 const AdminProfile = () => {
 
     const [profile, setProfile] = React.useState({})
+    const editFormReference = React.useRef()
+    const [editBtn, setEditBtn] = React.useState(true)
+
+    const getUser = () => {
+        try {
+            const user = UserService.getUsers();
+            setProfile(user)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     React.useEffect(() => {
-        setProfile(UserService.getUsers());
+        getUser();
     }, [])
 
-    const editFormReference = React.useRef()
-
     const editFunc = () => {
-        const editInput = document.getElementsByTagName('input')
-        for(let i=0; i<editInput.length; i++) {
-            editInput[i].removeAttribute('disabled')
-            editInput[i].style.color='black'
-        }
-        const formBtn = document.getElementsByClassName('form-btn');
-        formBtn[0].classList.remove('d-none')
-        editFormReference.current.fName.value=profile.firstName
-        editFormReference.current.lName.value=profile.lastName
-        editFormReference.current.email.value=profile.email
-        editFormReference.current.phone.value=profile.phone
+        setEditBtn(false);
     }
+
     const Cancel = () => {
-        const hide = document.getElementsByClassName('form-btn');
-        hide[0].classList.add('d-none')
-        const editInput = document.getElementsByTagName('input')
-        for(let i=0; i<editInput.length; i++) {
-            editInput[i].setAttribute('disabled', 'true')
-        }
+        setEditBtn(true)
     }
+
     const updateUser = async (admin) => {
         try {
             // eslint-disable-next-line no-unused-vars
@@ -62,82 +59,162 @@ const AdminProfile = () => {
     }
 
     return (
-    <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <SideBar />
-        <Box className='profile-box' sx={{marginLeft: '20px', marginTop: '80px'}}>
-            <div className='container'>
-                <Grid container>
-                    <Grid item xs={3} className='profile-avatar-box'>
-                        <div className='avatar-section'>
-                            <Avatar
-                                alt="Adyasha"
-                                src='https://drive.google.com/uc?export=view&id=1rieshCiK86jIqrloZ0A9TJVbkN2yx6yo'
-                                sx={{ width: 150, height: 150, margin: 'auto' }}
-                            />
-                        </div>
-                        <div className='other'>
-                            <Typography paragraph sx={{marginLeft: 1}}>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-                                enim praesent..
-                            </Typography>
-                        </div>
-                        <div className='avatar-btn'>
-                            <button>Read More</button>
-                        </div>
-                    </Grid>
-                    <Grid item xs={9}>
-                        <div className='profile-edit'>
-                            <Button variant='contained' onClick={() => editFunc()}>Edit</Button>
-                        </div>
-                        <Typography variant='h4' 
-                                    textAlign='center' 
-                                    sx={{marginBottom: '10px', textTransform:'uppercase'}}
-                        >   <b>Profile Section</b>
-                        </Typography>
-                        <Divider />
-                        <Box sx={{marginTop: '50px'}}>
-                            <form ref={editFormReference} onSubmit={(event) => submitEditBtn(event)}>
-                                <Grid container>
-                                    {/*TODO: First Grid */}
-                                    <Grid item xs={1}></Grid>
-                                    <Grid item xs={4} sx={{ display:'flex', flexDirection:'column' }} >
-                                        <label>First Name</label>
-                                        <input type='text' disabled style={{ height:'50px' }} name="fName" />    
-                                    </Grid>
-                                    <Grid item xs={2}></Grid>
-                                    <Grid item xs={4} sx={{ display:'flex', flexDirection:'column' }} > 
-                                        <label>Last Name</label>
-                                        <input type='text' disabled style={{ height:'50px' }} name="lName" />     
-                                    </Grid>
-                                    <Grid item xs={1}></Grid>
-                                    <div className='grid-gap'></div>
-                                    {/*TODO: Second Grid */}
-                                    <Grid item xs={1}></Grid>
-                                    <Grid item xs={4} sx={{ display:'flex', flexDirection:'column' }} >
-                                        <label>Email</label>
-                                        <input type='email' disabled style={{ height:'50px' }} name="email" />   
-                                    </Grid>
-                                    <Grid item xs={2}></Grid>
-                                    <Grid item xs={4} sx={{ display:'flex', flexDirection:'column' }} >
-                                    <label>Phones</label>
-                                    <input disabled style={{ height:'50px' }} name="phone"   />    
-                                    </Grid>
-                                    <Grid item xs={1}></Grid>
-                                    <div className='grid-gap'></div>
-                                </Grid>
-                                <div className='form-btn d-none'>
-                                    <Button type='submit' variant='contained' color='success'>Submit</Button>
-                                    <Button onClick={() => Cancel()} variant='contained' color='error'>Cancel</Button>
-                                </div>
-                            </form>
+        <Box sx={{ display: 'flex' }}>
+            <CssBaseline />
+            <SideBar />
+            <Box className='profile-box' sx={{ml: '180px', mt: '80px'}}>
+                <div className='container'>
+                    <div className='profile-edit'>
+                        <Button variant='contained' color='secondary' startIcon={<SettingsIcon />} onClick={() => editFunc()}>Edit</Button>
+                    </div>
+                    <Typography variant='h4' 
+                                textAlign='center' 
+                                sx={{marginBottom: '10px', textTransform:'uppercase'}}
+                    >   <b>Profile Section</b>
+                    </Typography>
+                    <Divider sx={{ bgcolor: "secondary.light" }}  />
+                    <Box sx={{marginTop: '50px'}}>
+                        <Box component='form' ref={editFormReference} onSubmit={(event) => submitEditBtn(event)}>
+                            <Stack container sx={{ mb: '10px', pl: 5 }}>
+                                <Box component='div' className="px-3">
+                                    <Box component='div' className='d-flex align-items-center justify-content-between' sx={{width: 600}}>
+                                        <div style={{width:'200px'}}>
+                                            <h5>First Name: </h5>
+                                        </div>
+                                        {editBtn 
+                                            ? 
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <p>{`${profile.firstName}`}</p>
+                                                </div>
+                                            :
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <TextField sx={{width:'350px'}} 
+                                                                defaultValue={`${profile.firstName}`} 
+                                                                name="firstName" 
+                                                                inputProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                    />
+                                                </div>
+                                        }
+                                    </Box>
+                                </Box>
+                                <Box component='div' className="px-3 mt-3">
+                                    <Box component='div' className='d-flex align-items-center justify-content-between' sx={{width: 600}}>
+                                        <div style={{width:'200px'}}>
+                                            <h5>Last Name: </h5>
+                                        </div>
+                                        {editBtn 
+                                            ? 
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <p>{`${profile.lastName}`}</p>
+                                                </div>
+                                            :
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <TextField sx={{width:'350px'}} 
+                                                                defaultValue={`${profile.lastName}`} 
+                                                                name="lastName" 
+                                                                inputProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                    />
+                                                </div>
+                                        }
+                                    </Box>
+                                </Box>
+                                <Box component='div' className="px-3 mt-4">
+                                    <Box component='div' className='d-flex align-items-center justify-content-between' sx={{width: 600}}>
+                                        <div style={{width:'200px'}}>
+                                            <h5>Email: </h5>
+                                        </div>
+                                        {editBtn 
+                                            ?
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <p>{profile.email}</p>
+                                                </div>
+                                            :
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <TextField sx={{width:'350px'}} 
+                                                                defaultValue={profile.email}
+                                                                inputProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                    />
+                                                </div>
+                                        }
+                                    </Box>
+                                </Box>
+                                <Box component='div' className="px-3 mt-4">
+                                    <Box component='div' className='d-flex align-items-center justify-content-between' sx={{width: 600}}>
+                                        <div style={{width:'200px'}}>
+                                            <h5>Username: </h5>
+                                        </div>
+                                        {editBtn
+                                            ?
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <p>{profile.username}</p>
+                                                </div>
+                                            :
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <TextField sx={{width:'350px'}} 
+                                                                defaultValue={profile.username}
+                                                                inputProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                    />
+                                                </div>
+                                        }
+                                    </Box>
+                                </Box>
+                                <Box component='div' className="px-3 mt-4 py-2">
+                                    <Box component='div' className='d-flex align-items-center justify-content-between' sx={{width: 600}}>
+                                        <div style={{width:'200px'}}>
+                                            <h5>Phone: </h5>
+                                        </div>
+                                        {editBtn
+                                            ?
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <p>{profile.phone}</p>
+                                                </div>
+                                            :
+                                                <div style={{width:'400px', paddingTop: '6px'}}>
+                                                    <TextField sx={{width:'350px'}} 
+                                                                defaultValue={profile.phone}
+                                                                inputProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                                InputLabelProps={{
+                                                                    style: {fontFamily: 'poppins'}
+                                                                }}
+                                                    />
+                                                </div>
+                                        }
+                                    </Box>
+                                </Box>
+                                {!editBtn && 
+                                    <Box component='div' className='form-btn'>
+                                        <Button type='submit' variant='contained' color='success'>Submit</Button>
+                                        <Button onClick={() => Cancel()} variant='contained' color='error'>Cancel</Button>
+                                    </Box>
+                                }
+                            </Stack>
                         </Box>
-                    </Grid>
-                </Grid>
-            </div>
+                    </Box>
+                </div>
+            </Box>
         </Box>
-    </Box>
     )
 }
 

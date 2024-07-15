@@ -7,15 +7,18 @@ export default function UserDashboard() {
     <React.Fragment>
       <Box height={30} />
       <UserSideBar />
-      <Box component="main" sx={{ backgroundColor:'#C5C5C5', margin:'35px 0 0 200px', padding:'10px 0 0 10px', minHeight:'596px' }}>
-        <Box sx={{backgroundColor:'#fff', minHeight:'576px', p:2 }}>
+      <Box component="main" 
+              sx={{ backgroundColor:'#C5C5C5', margin:'35px 0 0 250px', 
+                    padding:'10px 0 0 10px', minHeight:'596px' }}
+      >
+        <Box sx={{ backgroundColor:'#fff', minHeight:'576px', p:2 }}>
           <h1 >User DashBoard</h1>
-          <Typography paragraph>
+          <Typography paragraph fontFamily="poppins"v>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
             tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
             enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
             imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-            Convallis convallis tellus id interdum velit laoreet id donec ultrices.
+            Convallis convallis tell us id interdum velit laoreet id donec ultrices.
             Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
             adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
             nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
@@ -24,7 +27,7 @@ export default function UserDashboard() {
             consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
             sapien faucibus et molestie ac.
           </Typography>
-          <Typography paragraph>
+          <Typography paragraph fontFamily="poppins">
             Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
             eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
             neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra

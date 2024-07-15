@@ -5,15 +5,16 @@ import MuiAppBar from '@mui/material/AppBar';
 import CategoryIcon from '@mui/icons-material/Category';
 import CategoryService from '../services/CategoryService'
 import swal from 'sweetalert';
-import { Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import HomeIcon from '@mui/icons-material/Home';
 import LoginService from '../services/LoginService';
 import UserService from '../services/UserService';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PreLoading from './PreLoading';
 
-const drawerWidth = 200;
+const drawerWidth = 250;
 
 
 const AppBar = styled(MuiAppBar, {
@@ -35,19 +36,18 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 
-
-
 const UserSideBar = (props) => {
 
   const { window } = props;
   const [categories, setCategories] = React.useState([])
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const navigate = useNavigate()
   const [getNav, setGetNav] = React.useState(false)
   const [navBar, setNavBar] = React.useState([
-    {text: 'HOME', icon: <HomeIcon />, path: '/Admin'},
-    {text: 'CONTACT', icon: <ContactsIcon />, path: '/Admin'},
+    {text: 'HOME', icon: <HomeIcon />, path: '/User'},
+    {text: 'CONTACT', icon: <ContactsIcon />, path: '/User'},
   ])
+  const [ preLoading, setPreLoading ] = React.useState(true);
+  const navigate = useNavigate()
 
 
   const handleDrawerToggle = () => {
@@ -58,8 +58,11 @@ const UserSideBar = (props) => {
 
   const getCategoriesData = async () => {
     try {
-      const result = await CategoryService.getAllCategories();
-      setCategories(result.data)
+      const resultResponse = await CategoryService.getAllCategories();
+      if(resultResponse.status === 200) {
+        setCategories([...resultResponse.data])
+        setPreLoading(false);
+      }
     } catch (error) {
       swal("Something went wrong!!", `${error}`, "error");
     }
@@ -89,39 +92,49 @@ const UserSideBar = (props) => {
     navigate('/login')
   }
 
+  if(preLoading) {
+    return (
+      <Box>
+        <Box sx={{ bgcolor: '#f7f7ff', minHeight: 580, }}>
+          <PreLoading />
+        </Box>
+      </Box>
+    )    
+  }
+
   const drawer = (
     <React.Fragment>
       <Toolbar />
       <Divider />
       <List>
-        <ListItem key={'0'} disablePadding>
+        <ListItem key={'allQuiz'} disablePadding>
           <ListItemButton onClick={() => {navigate('/User/Quiz/0')}}>
             <ListItemIcon>
               <CategoryIcon />
             </ListItemIcon>
-            <ListItemText primary={'ALL Category'} />
+            <ListItemText primary={<span style={{ fontFamily: "poppins" }}>All Categories</span>} />
           </ListItemButton>
         </ListItem>
         <Divider />
         {categories.map((item, index) => (
-          <div key={item.title}>
+          <Box key={index}>
             <ListItem key={item.title} disablePadding>
-              <ListItemButton  onClick={() => {navigate(`/User/Quiz/${item.cid}`)}}>
+              <ListItemButton  onClick={() => {navigate(`/User/Quiz/${item.id}`)}}>
                 <ListItemIcon>
                   <CategoryIcon />
                 </ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemText primary={<span style={{ fontFamily: "poppins" }}>{item.title}</span>} />
               </ListItemButton>
             </ListItem>
             <Divider />
-          </div>
+          </Box>
         ))}
-        <ListItem key={'1'} disablePadding>
+        <ListItem key={'logout'} disablePadding>
           <ListItemButton onClick={() => Logout()}>
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary={'Logout'} />
+            <ListItemText primary={<span style={{ fontFamily: "poppins" }}>Logout</span>} />
           </ListItemButton>
         </ListItem>
       </List>

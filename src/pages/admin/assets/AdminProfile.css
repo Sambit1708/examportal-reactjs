@@ -1,5 +1,8 @@
+* {
+  font-family: "Poppins", sans-serif;
+}
 .container {
-  width: 70%;
+  width: 800px;
   box-shadow: 5px 10px 8px #888888;
   border: 1px solid #e5e5e5;
 }

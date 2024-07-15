@@ -26,13 +26,21 @@ const SignUpPage = () => {
     setData(newData)
   }
 
+  const handleSubmiitForm = async () => {
+    try {
+      console.log(data)
+      const userResponse = await UserService.createNewUser(data);
+      if(userResponse.status === 201) {
+        swal("Good job!", "User Saved Successfully!", "success");
+      }
+    } catch (error) {
+      swal("Something went wrong!!", ''+error, "error");
+    }
+  }
+
   const submitForm = (event) => {
     event.preventDefault();
-    UserService.createNewUser(data).then((res) => {
-      swal("Good job!", "User Saved Successfully!", "success");
-    }).catch((error) => {
-      swal("Something went wrong!!", ''+error, "error");
-    })
+    handleSubmiitForm();
   }
   
   return (
@@ -48,10 +56,14 @@ const SignUpPage = () => {
                   <div className='form-div-input'>
                     <div className="row g-3 input-column">
                       <div className="col">
-                        <input type="text" id="firstName" onChange={(event) => handleData(event)} className="form-control" placeholder="First name" aria-label="First name" />
+                        <input type="text" id="firstName"
+                                className="form-control" onChange={(event) => handleData(event)}
+                                placeholder="First name" aria-label="First name" />
                       </div>
                       <div className="col">
-                        <input type="text" id="lastName" onChange={(event) => handleData(event)} className="form-control" placeholder="Last name" aria-label="Last name" />
+                        <input type="text" id="lastName" 
+                                className="form-control" onChange={(event) => handleData(event)}
+                                placeholder="Last name" aria-label="Last name" />
                       </div>
                     </div>
                     <div className='input-column'>

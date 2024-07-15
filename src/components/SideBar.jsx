@@ -1,19 +1,12 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
+import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
+import { Toolbar, Typography, Divider, IconButton,  } from '@mui/material'
+import { ListItemText, Tab, Tabs, ListItemButton, ListItemIcon, ListItem } from '@mui/material'
+import MuiDrawer  from '@mui/material/Drawer'
+import MuiAppBar  from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
@@ -22,9 +15,9 @@ import QueueIcon from '@mui/icons-material/Queue';
 import CategoryIcon from '@mui/icons-material/Category';
 import PlaylistAddCircleIcon from '@mui/icons-material/PlaylistAddCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import { useNavigate } from 'react-router-dom';
 import LoginService from '../services/LoginService';
-import { Tab, Tabs } from '@mui/material';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import LoginIcon from '@mui/icons-material/Login';
 import UserService from '../services/UserService';
@@ -99,8 +92,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const SideBar = () => {
 
   const navigate = useNavigate()
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [value, setValue] = React.useState(0);
   const [getNav, setGetNav] = React.useState(false)
   const [navBar, setNavBar] = React.useState([
@@ -127,16 +119,17 @@ const SideBar = () => {
   }, [])
 
   const drawerUpperList = [
-    {text:'Home', icon: <HomeIcon />, path: '/Admin' },
-    {text:'Profile', icon: <AccountCircleIcon />, path: '/Admin/Profile' },
-    {text:'Users', icon: <SupervisedUserCircleIcon />, path: '/Admin/Users' },
-    {text:'Logout', icon: <LogoutIcon />, path: '/' }
+    {text:'Home', icon: <HomeIcon sx={{color: '#fff'}} />, path: '/Admin' },
+    {text:'Profile', icon: <AccountCircleIcon sx={{color: '#fff'}} />, path: '/Admin/Profile' },
+    {text:'Users', icon: <SupervisedUserCircleIcon sx={{color: '#fff'}} />, path: '/Admin/Users' },
+    {text:'Logout', icon: <LogoutIcon sx={{color: '#fff'}} />, path: '/' }
   ]
   const drawerDownList = [
-    {text:'Category', icon: <CategoryIcon />, path: '/Admin/Category' },
-    {text:'Add Category', icon: <PlaylistAddCircleIcon />, path: '/Admin/Category/Add' },
-    {text:'Quiz', icon: <QuizIcon />, path: '/Admin/Quiz' },
-    {text:'Add Quiz', icon: <QueueIcon />, path: '/Admin/Quiz/Add' }
+    {text:'Category', icon: <CategoryIcon sx={{color: '#fff'}} />, path: '/Admin/Category' },
+    {text:'Add Category', icon: <PlaylistAddCircleIcon sx={{color: '#fff'}} />, path: '/Admin/Category/Add' },
+    {text:'Quiz', icon: <QuizIcon sx={{color: '#fff'}} />, path: '/Admin/Quiz' },
+    {text:'Add Quiz', icon: <QueueIcon sx={{color: '#fff'}} />, path: '/Admin/Quiz/Add' },
+    {text:'Results', icon: <AssessmentIcon sx={{color: '#fff'}} />, path: '/Admin/results' }
   ]
 
   const handleDrawerOpen = () => {
@@ -167,6 +160,7 @@ const SideBar = () => {
             sx={{
               marginRight: 5,
               ...(open && { display: 'none' }),
+              color: '#fff'
             }}
           >
             <MenuIcon />
@@ -188,14 +182,23 @@ const SideBar = () => {
           </React.Fragment>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={open}
+        PaperProps={{
+          sx: {
+              backgroundColor: 'rgb(28, 37, 54)',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center top',
+              backgroundImage: `url(https://res.cloudinary.com/djgwfxhqp/image/upload/v1721022631/aa4wqwqyyjfs4cdhrp5g.svg)`,
+          }
+        }}
+      >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {!open ? "" : <ChevronLeftIcon sx={{ color: "#fff" }} />}
           </IconButton>
         </DrawerHeader>
-        <Divider />
-        <List>
+        <Divider sx={{ bgcolor: "secondary.light" }} />
+        <List sx={{ color: '#fff' }}>
           {(drawerUpperList).map((item, index) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
@@ -215,13 +218,13 @@ const SideBar = () => {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={<span style={{ fontFamily: "poppins" }}>{item.text}</span>} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-        <Divider />
-        <List>
+        <Divider sx={{ bgcolor: "secondary.light" }} />
+        <List sx={{ color: '#fff' }}>
           {(drawerDownList).map((item, index) => (
             <ListItem key={item.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
@@ -241,7 +244,7 @@ const SideBar = () => {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={<span style={{ fontFamily: "poppins" }}>{item.text}</span>} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}

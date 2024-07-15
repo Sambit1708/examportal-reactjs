@@ -1,9 +1,10 @@
 import axios from "../Utils/axios"
 
-const RESULT = '/result';
-const RECENT_RESULT = '/recent-result'
-const EVAL_QUIZ = '/eval-quiz'
-const CHECK_RESULT = '/check-result'
+const RESULT = '/api/result';
+const RECENT_RESULT = '/recent-result';
+const EVAL_QUIZ = '/eval-quiz';
+const CHECK_RESULT = '/check-result';
+const BY_QUIZ = '/by-quiz';
 
 class ResultService {
 
@@ -26,11 +27,11 @@ class ResultService {
 
     /**
      * * This method check for preious result
-     * @param {*} data 
+     * @param {*} userId, quizId 
      * @returns {*} Result
      */
-    getResultByUserAndQuiz(data) {
-        return axios.post(`${RESULT}${CHECK_RESULT}`, data);
+    getResultByQuiz(quizId) {
+        return axios.get(`${RESULT}${CHECK_RESULT}?quizId=${quizId}`);
     }
 
     /**
@@ -40,6 +41,14 @@ class ResultService {
      */
     getResultById(id) {
         return axios.get(`${RESULT}/${id}`);
+    }
+
+    getAllResultOfQuiz(quizId) {
+        return axios.get(`${RESULT}${BY_QUIZ}?quizId=${quizId}`);
+    }
+
+    getAllResults() {
+        return axios.get(`${RESULT}/get`);
     }
 }
 

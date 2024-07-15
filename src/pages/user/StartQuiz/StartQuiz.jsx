@@ -1,18 +1,21 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import * as React from 'react'
-import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography, useMediaQuery } from '@mui/material'
+import * as React from 'react';
+import { Box, Button, Card, CardContent, CardHeader, CircularProgress, FormControl } from '@mui/material';
+import { FormControlLabel, Grid, Radio, RadioGroup, Typography, Divider, useMediaQuery } from '@mui/material';
 import QuestionService from '../../../services/QuestionService';
 import Swal from 'sweetalert2';
-import ResultService from '../../../services/ResultService'
+import ResultService from '../../../services/ResultService';
 import { useNavigate } from 'react-router-dom';
-import UserService from '../../../services/UserService';
 
 
-//TODO: Need to add sume interesting component for Quiz Result.
+//TODO: Need to add some interesting component for Quiz Result.
 export default function StartQuiz() {
 
   const isMatches = useMediaQuery('(max-width:600px)');
   const [questions, setQuestions] = React.useState([]);
+  const [resultData, setResultData] = React.useState({
+    quizId: parseInt(window.location.href.slice(window.location.href.lastIndexOf('/')+1, window.location.href.length)),
+    questionAnswer: []
+  });
   const [isSubmit, setIsSubmit] = React.useState(false)
   const [second, setSecond] = React.useState(100);
   const time = React.useRef()
@@ -20,37 +23,43 @@ export default function StartQuiz() {
 
   const fetchResultByUserAndQuiz = async (id) => {
     try {
-        const User = await UserService.getCurrentUser();
-        const userId = User.data.id
-        const QuizResult = {
-            user: {
-                id: userId
-            },
-            quiz: {
-                qid: id
-            }
-        }
-        const result = await ResultService.getResultByUserAndQuiz(QuizResult);
-        if(result.data !== '') {
-            Swal.fire('Alredy Appeared', "You have already appeared this examination.", 'warning')
-            navigate(`/User/Quiz/Result/${id}`)
-        }
-    } catch(error) {
-        Swal.fire("Some thing went wrong!!", `${error}`, "error");
-    }
-}
-
-  function fetchQuestionByQuiz (quizId) {
-
-    QuestionService.getQuestionByQuiz(quizId).then((result) => {
-      var newData = [...result.data]
-      if(questions.length === 0) {
-        setSecond(newData.length * 2 * 60)
+      const resultResponse = await ResultService.getResultByQuiz(id);
+      if(resultResponse.status === 200) {
+        Swal.fire('Alredy Appeared', "You have already appeared this examination.", 'warning')
+        navigate(`/User/Quiz/Result/${id}`)
       }
-      setQuestions(newData)
-    }).catch((error) => {
+    } 
+    catch(error) {
+      if(error.response.status !== 404) {
+        Swal.fire("Some thing went wrong!!", `${error}`, "error");
+      }
+    }
+  }
+
+  const fetchQuestionByQuiz = async (quizId) => {
+    try {
+      const questionResponse = await QuestionService.getQuestionByQuiz(quizId);
+      if(questionResponse.status === 200) {
+        var newData = questionResponse.data
+        if(questions.length === 0) {
+          setSecond(newData.length * 2 * 60)
+        }
+        var k=questionResponse.data.length
+        var rslt = {...resultData}
+        for(let j=0; j<k; j++) {
+          var datax = {
+            questionId: newData[j].id,
+            choosedOption: "None"
+          }
+          rslt.questionAnswer.push(datax)
+        }
+        setQuestions(newData)
+        setResultData(rslt)
+      }
+    }
+    catch(error) {
       Swal.fire("Some thing went wrong!!", `${error}`, "error")
-    })
+    }
   }
 
   React.useEffect(() => {
@@ -111,24 +120,26 @@ export default function StartQuiz() {
   )
 
   const handleAnswerChange = (event, id) => {
-    var newData = [...questions]
-    for(let i=0; i<newData.length; i++) {
-      if(newData[i].quesid === id) {
-        newData[i].choosedAnswer = event.target.value
+    var newData = {...resultData};
+    for(let i=0; i<newData.questionAnswer.length; i++) {
+      
+      if(newData.questionAnswer[i].questionId === id) {
+        newData.questionAnswer[i].choosedOption = event.target.value;
         break;
       }
     }
-    setQuestions(newData)
+    setResultData(newData)
   }
 
-  const submitQuiz = () => {
-    
-    questions.forEach((q) => {
-      q['defaultUserId'] = JSON.parse(localStorage.getItem('user')).id;
-    })
+  const submitQuiz = async () => {
     try {
-      // eslint-disable-next-line no-unused-vars
-      const result = ResultService.evaluateQuiz(questions);
+      const resultResponse = await ResultService.evaluateQuiz(resultData);
+      if(resultResponse.status === 201) {
+
+        setIsSubmit(true);
+        setSecond(0)
+        navigate(`/User/Quiz/Result/${window.location.href.slice(window.location.href.lastIndexOf('/')+1, window.location.href.length)}`)
+      }
     } catch(error) {
       Swal.fire("Some thing went wrong", `${error}`, "error")
     }
@@ -149,105 +160,102 @@ export default function StartQuiz() {
       confirmButtonText: 'Yes, Submit it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        
-        setIsSubmit(true);
-        setSecond(0)
         submitQuiz();
         navigate(`/User/Quiz/Result/${window.location.href.slice(window.location.href.lastIndexOf('/')+1, window.location.href.length)}`)
       }
-    }) 
+    })
   }
 
   return (
     <div style={{backgroundColor: '#E5E7E9'}}>
-        <Box sx={{ p: 2}}>
-          {!isSubmit ? <QuizTimer /> : (<React.Fragment></React.Fragment>)}
-          <Box sx={{ margin:'auto' ,  width: [300, 400, 500, 700, 1000],}}>
-            <form onSubmit={(event) => formSubmit(event) }>
-              {questions.map((item, index) => (
-                <Card key={index} sx={{marginBottom: '20px'}}>
-                  <CardHeader 
-                    title=<h5>{`Q${index+1}) `}<div dangerouslySetInnerHTML={{__html: item.content}}></div></h5>
-                  />
-                  <Divider />
-                  <CardContent>
-                    <FormControl sx={{width: '100%'}}>
-                      <RadioGroup
-                        aria-labelledby="quiz-radio-buttons-group-label"
-                        name={`Q${index+1}`}
-                        onChange={(event, id) => handleAnswerChange(event, item.quesid)}
-                      >
-                        <Grid container >
-                          <Grid item xs={5}>
-                            <FormControlLabel
-                                    value="option1" 
-                                    control={<Radio />} 
-                                    label={item.option1}
-                                    sx={isMatches ? {'& .MuiSvgIcon-root': {
-                                                        fontSize: 20,
-                                                    },
-                                                      '& .MuiFormControlLabel-label': {
-                                                          fontSize: 15,
-                                                    }} : {}
-                                    }
-                            />
-                          </Grid>
-                          <Grid item xs={2}></Grid>
-                          <Grid item xs={5}>
-                            <FormControlLabel 
-                                    value="option2" 
-                                    control={<Radio />} 
-                                    label={item.option2}
-                                    sx={isMatches ? { '& .MuiSvgIcon-root': {
-                                                          fontSize: 20,
-                                                    },
-                                                      '& .MuiFormControlLabel-label': {
-                                                          fontSize: 15,
-                                                    }} : {}
-                                    } 
-                            />
-                          </Grid>
-                          <Grid item xs={5}>
-                            <FormControlLabel 
-                                    value="option3"  
-                                    control={<Radio />} 
-                                    label={item.option3}
-                                    sx={isMatches ? { '& .MuiSvgIcon-root': {
-                                                          fontSize: 20,
-                                                    },
-                                                        '& .MuiFormControlLabel-label': {
-                                                            fontSize: 15,
-                                                    }} : {}
-                                    } 
-                            />
-                          </Grid>
-                          <Grid item xs={2}></Grid>
-                          <Grid item xs={5}>
-                            <FormControlLabel 
-                                    value="option4" 
-                                    control={<Radio />} 
-                                    label={item.option4} 
-                                    sx={isMatches ? { '& .MuiSvgIcon-root': {
-                                                          fontSize: 20,
-                                                    },
-                                                        '& .MuiFormControlLabel-label': {
-                                                            fontSize: 15,
-                                                    }} : {}
-                                    }
-                            />
-                          </Grid>
+      <Box sx={{ p: 2}}>
+        {!isSubmit ? <QuizTimer /> : (<React.Fragment></React.Fragment>)}
+        <Box sx={{ margin:'auto' ,  width: [300, 400, 500, 700, 1000],}}>
+          <form onSubmit={(event) => formSubmit(event) }>
+            {questions.map((item, index) => (
+              <Card key={index} sx={{marginBottom: '20px'}}>
+                <CardHeader 
+                  title={<h5>{`Q${index+1}) `}<div dangerouslySetInnerHTML={{__html: item.content}}></div></h5>}
+                />
+                <Divider />
+                <CardContent>
+                  <FormControl sx={{width: '100%'}}>
+                    <RadioGroup
+                      aria-labelledby="quiz-radio-buttons-group-label"
+                      name={`Q${index+1}`}
+                      onChange={(event, id) => handleAnswerChange(event, item.id)}
+                    >
+                      <Grid container >
+                        <Grid item xs={5}>
+                          <FormControlLabel
+                                  value="option1" 
+                                  control={<Radio />} 
+                                  label={item.option1}
+                                  sx={isMatches ? {'& .MuiSvgIcon-root': {
+                                                      fontSize: 20,
+                                                  },
+                                                    '& .MuiFormControlLabel-label': {
+                                                        fontSize: 15,
+                                                  }} : {}
+                                  }
+                          />
                         </Grid>
-                      </RadioGroup>
-                    </FormControl>
-                  </CardContent>
-                </Card>
-              )) }
-              <div style={{ textAlign: 'center', marginBottom: '10px' }}>
-                <Button variant='contained' type='submit'>Submit</Button>
-              </div>
-            </form>
-          </Box>
+                        <Grid item xs={2}></Grid>
+                        <Grid item xs={5}>
+                          <FormControlLabel 
+                                  value="option2" 
+                                  control={<Radio />} 
+                                  label={item.option2}
+                                  sx={isMatches ? { '& .MuiSvgIcon-root': {
+                                                        fontSize: 20,
+                                                  },
+                                                    '& .MuiFormControlLabel-label': {
+                                                        fontSize: 15,
+                                                  }} : {}
+                                  } 
+                          />
+                        </Grid>
+                        <Grid item xs={5}>
+                          <FormControlLabel 
+                                  value="option3"  
+                                  control={<Radio />} 
+                                  label={item.option3}
+                                  sx={isMatches ? { '& .MuiSvgIcon-root': {
+                                                        fontSize: 20,
+                                                  },
+                                                      '& .MuiFormControlLabel-label': {
+                                                          fontSize: 15,
+                                                  }} : {}
+                                  } 
+                          />
+                        </Grid>
+                        <Grid item xs={2}></Grid>
+                        <Grid item xs={5}>
+                          <FormControlLabel 
+                                  value="option4" 
+                                  control={<Radio />} 
+                                  label={item.option4} 
+                                  sx={isMatches ? { '& .MuiSvgIcon-root': {
+                                                        fontSize: 20,
+                                                  },
+                                                      '& .MuiFormControlLabel-label': {
+                                                          fontSize: 15,
+                                                  }} : {}
+                                  }
+                          />
+                        </Grid>
+                      </Grid>
+                    </RadioGroup>
+                  </FormControl>
+                </CardContent>
+              </Card>
+            )) }
+            <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+              <Button variant='contained' type='submit'>Submit</Button>
+            </div>
+          </form>
         </Box>
+      </Box>
     </div>
   )
 }

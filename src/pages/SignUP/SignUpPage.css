@@ -11,7 +11,7 @@
 }
 .image-grid {
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-    url("https://drive.google.com/uc?export=view&id=1kUYk6EhN_CNM0hjka2AnFccdbgb4NfnB");
+    url("https://res.cloudinary.com/djgwfxhqp/image/upload/v1721024011/a7lkzb1kjgxarzeoscjt.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -31,8 +31,9 @@
 }
 .image-conatiner-text p {
   position: relative;
-  left: 25px;
-  margin-top: -10px;
+  width: 70%;
+  /* left: 25px; */
+  margin-top: 10px;
 }
 .image-conatiner-btn {
   width: 100%;

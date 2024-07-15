@@ -5,6 +5,7 @@ const USER_PATH = "/user"
 const USER_ADD_PATH = "/create-user";
 const CURRENT_USER_PATH = "/current-user";
 const UPDATE_USER = '/update-user'
+const USER_ACTION = '/user-action'
 
 class UserService {
 
@@ -70,7 +71,7 @@ class UserService {
         if(userStr != null) {
             const data = JSON.parse(userStr)
             if(data.authorities[0].authority === 'ADMIN') {
-                return axios.get(`${USER_PATH}/`);
+                return axios.get(`${USER_PATH}/general`);
             }
         }
         return null;
@@ -79,9 +80,11 @@ class UserService {
      * ! To Update User
      */
     updateUser(user) {
-        console.log(user)
         return axios.post(`${USER_PATH}${UPDATE_USER}`, user);
-       
+    }
+
+    userAction(user) {
+        return axios.post(`${USER_PATH}${USER_ACTION}`, user);
     }
 }
 // eslint-disable-next-line import/no-anonymous-default-export

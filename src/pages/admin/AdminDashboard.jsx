@@ -9,8 +9,6 @@ import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import QuizIcon from '@mui/icons-material/Quiz';
 import CategoryIcon from '@mui/icons-material/Category';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-import Chart from 'react-apexcharts'
-import ApexCharts from 'apexcharts'
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -35,47 +33,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function AdminDashboard() {
 
-  var options = {
-    series: [{
-    name: 'Net Profit',
-    data: [44, 55, 57, 56, 61]
-  }, {
-    name: 'Revenue',
-    data: [76, 85, 101, 98, 87]
-  }, {
-    name: 'Free Cash Flow',
-    data: [35, 41, 36, 26, 45]
-  }],
-    chart: {
-    type: 'bar',
-    height: 300
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '70%',
-      endingShape: 'rounded'
-    },
-  },
-  dataLabels: {
-    enabled: false
-  },
-  stroke: {
-    show: true,
-    width: 2,
-    colors: ['transparent']
-  },
-  xaxis: {
-    categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun'],
-  },
-  
-  fill: {
-    opacity: 1
-  },
- 
-};
-
-  
 
   const [results, setResults] = React.useState([])
 
@@ -90,8 +47,8 @@ export default function AdminDashboard() {
 
   React.useEffect(() => {
     fecthRecentResult();
-    var chart = new ApexCharts(document.querySelector("#chart"), options);
-    chart.render();
+    // var chart = new ApexCharts(document.querySelector("#chart"), options);
+    // chart.render();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -103,16 +60,16 @@ export default function AdminDashboard() {
       <Box sx={{display: 'flex'}}>
         <SideBar />
           <Box className='flex-dashboard-component' component="main">
-            <div className=' d-flex justify-content-between' style={{ width:'850px'}}>
-              <Card sx={{ maxHeight: '150px', width: '250px', background: 'linear-gradient(to right, #eb3349, #f45c43)'}}>
+            <div className='d-flex justify-content-between' style={{ width:'750px'}}>
+              <Card sx={{ maxHeight: '140px', width: '220px', background: 'linear-gradient(to right, #eb3349, #f45c43)'}}>
                 <CardHeader title={(<div style={{color:'#fff', fontSize:'1.2em', fontWeight:'bold', textTransform:'uppercase'}}>150+</div>)} />
                   <CardContent>
                     <Typography sx={{color:'#fff', textTransform:'uppercase', letterSpacing:'1px' }} >User</Typography>
-                    <div style={{margin:'-80px 0 0 120px', color: 'rgba(0, 0, 0, 0.2)'}}>
-                      <PersonAddAlt1Icon sx={{fontSize:'6em'}} />
+                    <div style={{margin:'-80px 0 0 110px', color: 'rgba(0, 0, 0, 0.2)'}}>
+                      <PersonAddAlt1Icon sx={{fontSize:'5em'}} />
                     </div>
                   </CardContent>
-                  <CardActions sx={{ height: '25px',marginTop: '-17px', background:'rgba(0,0,0, 0.1)'}}>
+                  <CardActions sx={{ height: '25px',marginTop: '-12px', background:'rgba(0,0,0, 0.1)'}}>
                     <Typography sx={{color:'#fff', fontSize:'13px', margin:'auto',marginTop: '-5px'}} component='div' >
                       <div style={{cursor:'pointer'}}>
                         More Info<ArrowCircleRightIcon sx={{fontSize:'1.5em', marginLeft:'1px'}} />
@@ -120,15 +77,15 @@ export default function AdminDashboard() {
                     </Typography>
                 </CardActions>
               </Card>
-              <Card sx={{ maxHeight: '150px', width: '250px', backgroundColor: '#32de84' }}>
+              <Card sx={{ maxHeight: '140px', width: '220px', backgroundColor: '#32de84' }}>
                 <CardHeader title={(<div style={{color:'#fff', fontSize:'1.2em', textTransform:'uppercase', fontWeight:'bold' }}>150+</div>)} />
                 <CardContent>
                   <Typography sx={{color:'#fff', textTransform:'uppercase', letterSpacing:'1px' }} >Category</Typography>
-                  <div style={{margin:'-80px 0 0 120px', color: 'rgba(0, 0, 0, 0.2)'}}>
-                    <CategoryIcon sx={{fontSize:'6em'}} />
+                  <div style={{margin:'-80px 0 0 110px', color: 'rgba(0, 0, 0, 0.2)'}}>
+                    <CategoryIcon sx={{fontSize:'5em'}} />
                   </div>
                 </CardContent>
-                <CardActions sx={{ height: '25px',marginTop: '-17px', background:'rgba(0,0,0, 0.1)'}}>
+                <CardActions sx={{ height: '25px',marginTop: '-12px', background:'rgba(0,0,0, 0.1)'}}>
                     <Typography sx={{color:'#fff', fontSize:'13px', margin:'auto',marginTop: '-5px'}} component='div' >
                       <div style={{cursor:'pointer'}}>
                         More Info<ArrowCircleRightIcon sx={{fontSize:'1.5em', marginLeft:'1px'}} />
@@ -136,15 +93,15 @@ export default function AdminDashboard() {
                     </Typography>
                 </CardActions>
               </Card>
-              <Card sx={{ maxHeight: '150px', width: '250px', background: 'linear-gradient(to right, #36d1dc , #5b86e5)' }}>
+              <Card sx={{ maxHeight: '140px', width: '220px', background: 'linear-gradient(to right, #36d1dc , #5b86e5)' }}>
                 <CardHeader title={(<div style={{color:'#fff', fontSize:'1.2em', textTransform:'uppercase', fontWeight:'bold' }}>150+</div>)} />
                 <CardContent>
                   <Typography sx={{color:'#fff', textTransform:'uppercase', letterSpacing:'1px' }} >Quiz</Typography>
-                  <div style={{margin:'-80px 0 0 120px', color: 'rgba(0, 0, 0, 0.2)'}}>
-                    <QuizIcon sx={{fontSize:'6em'}} />
+                  <div style={{margin:'-80px 0 0 110px', color: 'rgba(0, 0, 0, 0.2)'}}>
+                    <QuizIcon sx={{fontSize:'5em'}} />
                   </div>
                 </CardContent>
-                <CardActions sx={{ height: '25px',marginTop: '-17px', background:'rgba(0,0,0, 0.1)'}}>
+                <CardActions sx={{ height: '25px',marginTop: '-12px', background:'rgba(0,0,0, 0.1)'}}>
                     <Typography sx={{color:'#fff', fontSize:'13px', margin:'auto',marginTop: '-5px'}} component='div' >
                       <div style={{cursor:'pointer'}}>
                         More Info<ArrowCircleRightIcon sx={{fontSize:'1.5em', marginLeft:'1px'}} />
@@ -154,10 +111,10 @@ export default function AdminDashboard() {
               </Card>
             </div>
             <div className=''>
-              <Card sx={{ height: '550px',width: '350px', background: '#fff'}}>
-                <CardHeader title=<b>{'ANALYTICS'}</b> />
+              <Card sx={{ height: '550px',width: '320px', background: '#fff'}}>
+                <CardHeader title={<b>{'ANALYTICS'}</b>} />
                 <CardContent>
-                  <Chart
+                  {/* <Chart
                     type='donut'
                     width={300}
                     height={300}
@@ -168,7 +125,7 @@ export default function AdminDashboard() {
                         enabled:false
                       }
                     }}
-                  />
+                  /> */}
                 <div id='chart'></div>
                 </CardContent>
               </Card>
@@ -176,8 +133,8 @@ export default function AdminDashboard() {
 
             <Container sx={{ margin:'-360px 0 0 -20px'}}>
               <Typography variant='h5' component='div' sx={{ fontWeight:'bold', marginBottom:'5px '}}>Recent&nbsp;Quiz Results</Typography>
-              <TableContainer sx={{ width: 800 }} component={Paper}>
-                <Table sx={{ width: 800 }} aria-label="customized table">
+              <TableContainer sx={{ width: 750 }} component={Paper}>
+                <Table sx={{ width: 750 }} aria-label="customized table">
                   <TableHead>
                     <TableRow>
                       <StyledTableCell>Quiz Title</StyledTableCell>

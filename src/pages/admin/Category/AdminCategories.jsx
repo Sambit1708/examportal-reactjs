@@ -42,7 +42,7 @@ export default function AdminCategories() {
                         component="nav"
                         aria-labelledby="nested-list-subheader"
                         subheader={
-                        <ListSubheader component="div" id="nested-list-subheader">
+                        <ListSubheader sx={{ fontFamily: "poppins" }} component="div" id="nested-list-subheader">
                             Categories
                         </ListSubheader>
                         }
@@ -54,14 +54,19 @@ export default function AdminCategories() {
                                     <ListItemIcon>
                                         <CategoryIcon />
                                     </ListItemIcon>
-                                    <ListItemText primary={item.title} secondary={item.description} />
+                                    <ListItemText primary={<span style={{ fontFamily: "poppins" }}>{item.title}</span>}
+                                                    secondary={<span style={{ fontFamily: "poppins" }}>{item.description}</span>} 
+                                    />
                                     </ListItemButton>
-                                <Divider sx={{width:'100%', minWidth: '600px'}}/>
+                                <Divider sx={{ borderColor: "black",width:'100%', minWidth: '600px'}}/>
                             </div>
                         ))}
             
                         <div className='text-center'>
-                            <Button onClick={() => navigator('/Admin/Category/Add')} className='mt-2' variant="contained" color="error">
+                            <Button onClick={() => navigator('/Admin/Category/Add')} 
+                                    className='mt-2' variant="contained" color="error"
+                                    sx={{ fontFamily: "poppins" }}
+                            >
                                 Add New Category
                             </Button>
                         </div>

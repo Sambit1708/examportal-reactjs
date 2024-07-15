@@ -2,7 +2,7 @@ import axios from '../Utils/axios';
 
 const QUIZES = "/quiz";
 const ADD_QUIZ = '/add-quiz'
-const DELETE_QUIZ = '/delete-quiz/'
+const DELETE_QUIZ = '/delete-quiz'
 const UPDATE_QUIZ = '/update-quiz'
 const  LOAD_QUIZ = '/get-quiz/'
 
@@ -27,11 +27,15 @@ class QuizService {
 
     /**
      * ! This method is used to delete quiz by Id
-     * @param {ID} data 
+     * @param {ID} qId 
      * @returns 
      */
-    deleteQuiz(data) {
-        return axios.delete(`${QUIZES}${DELETE_QUIZ}${data}`)
+    deleteQuiz(qId) {
+        return axios.delete(`${QUIZES}${DELETE_QUIZ}`, {
+            params: {
+                qId: qId
+            }
+        })
     }
 
     /**
@@ -45,11 +49,17 @@ class QuizService {
 
     /**
      * ! This method is used to update quiz By Quiz.
-     * @param {QUIZ} quiz 
-     * @returns {QUIZ}
+     * @param {*} qId 
+     * @param {*} quiz 
+     * @returns 
      */
-    updateQuiz(quiz) {
-        return axios.post(`${QUIZES}${UPDATE_QUIZ}`,quiz)
+    updateQuiz(qId, quiz) {
+        const url = `${QUIZES}${UPDATE_QUIZ}/${qId}`;
+        return axios.put(url, quiz, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
     }
 
     /**
