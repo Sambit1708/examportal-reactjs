@@ -37,5 +37,5 @@
 
 
 ## Result Page
-![Exam-ResultPage](https://github.com/Sambit1708/examportal-reactjs/assets/86182933/a1fb85bc-7722-453a-85cd-5a74585df476)
+![ResultPage](https://github.com/user-attachments/assets/bf5213e3-b4bf-4006-913d-186fd95f5f36)
 
