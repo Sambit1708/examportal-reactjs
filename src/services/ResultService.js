@@ -5,6 +5,7 @@ const RECENT_RESULT = '/recent-result';
 const EVAL_QUIZ = '/eval-quiz';
 const CHECK_RESULT = '/check-result';
 const BY_QUIZ = '/by-quiz';
+const SEARCH = '/search';
 
 class ResultService {
 
@@ -49,6 +50,16 @@ class ResultService {
 
     getAllResults() {
         return axios.get(`${RESULT}/get`);
+    }
+
+    getAllResultsBySearch(param) {
+        return axios.get(`${RESULT}${SEARCH}`, {
+            params: {
+                quiz: param.quiz,
+                firstName: param.firstName,
+                lastName: param.lastName
+            }
+        });
     }
 }
 
