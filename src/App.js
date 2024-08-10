@@ -108,7 +108,7 @@ function App() {
               </Route>
             </Route>
           </Route>
-          {/* <Route path='*' element={<PageNotFound />}></Route> */}
+          <Route path="*" element={<PageNotFound />}></Route>
         </Routes>
       </Router>
     </React.Fragment>
