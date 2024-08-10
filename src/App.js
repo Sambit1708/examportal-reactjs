@@ -1,6 +1,6 @@
 import * as React from "react";
 import HomePage from "./pages/HomePage/HomePage";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import SignUpPage from "./pages/SignUP/SignUpPage";
 import LoginPage from "./pages/Login/LoginPage";
 import UserDashboard from "./pages/user/UserDashboard";
@@ -45,7 +45,7 @@ function App() {
   return (
     <React.Fragment>
       <Loading show={loading} />
-      <Router>
+      <Router hashType="noslash">
         <Routes>
           <Route path="/">
             <Route index element={<HomePage />}></Route>
