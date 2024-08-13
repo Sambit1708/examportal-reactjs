@@ -72,6 +72,7 @@ function App() {
                     element={<AdminQuestion />}
                   ></Route>
                   <Route path="Question">
+                    {" "}
                     <Route index element={<AdminQuizes />}></Route>
                     <Route
                       path="Add/:id"
